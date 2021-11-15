@@ -5,6 +5,32 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>画板</title>
+    <link rel="stylesheet" href="style.css" />
+    <!-- 引入样式文件 -->
   </head>
-  <body></body>
+  <body>
+    <div id="canvas"></div>
+    <script>
+      canvas.onclick = (e) => {
+        console.log(e.clientX);
+        console.log(e.clientY);
+        // console.log调试
+        let div = document.createElement("div");
+        // 让文档创建一个元素(标签)
+        div.style.position = "absolute";
+        // 让div的内敛样式position变成绝对定位
+        div.style.left = e.clientX + "px";
+        div.style.top = e.clientY + "px";
+        // div.style.border = "1px solid red";
+        div.style.width = "6px";
+        div.style.height = "6px";
+        div.style.marginLeft = "-3px";
+        div.style.marginTop = "-3px";
+        div.style.borderRadius = "50%";
+        div.style.backgroundColor = "black";
+        canvas.appendChild(div);
+        //   把孩子div添加到canvas  如果不写这句 默认let创建的div还在内存里
+      };
+    </script>
+  </body>
 </html>

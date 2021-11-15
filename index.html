@@ -9,27 +9,50 @@
     <!-- 引入样式文件 -->
   </head>
   <body>
-    <div id="canvas"></div>
+    <!-- 画线 -->
+    <canvas id="canvas"></canvas>
+    <!-- canvas一开始就要确定宽高  在css里改会导致一些问题 -->
     <script>
-      canvas.onclick = (e) => {
-        console.log(e.clientX);
-        console.log(e.clientY);
-        // console.log调试
-        let div = document.createElement("div");
-        // 让文档创建一个元素(标签)
-        div.style.position = "absolute";
-        // 让div的内敛样式position变成绝对定位
-        div.style.left = e.clientX + "px";
-        div.style.top = e.clientY + "px";
-        // div.style.border = "1px solid red";
-        div.style.width = "6px";
-        div.style.height = "6px";
-        div.style.marginLeft = "-3px";
-        div.style.marginTop = "-3px";
-        div.style.borderRadius = "50%";
-        div.style.backgroundColor = "black";
-        canvas.appendChild(div);
-        //   把孩子div添加到canvas  如果不写这句 默认let创建的div还在内存里
+      let canvas = document.getElementById("canvas");
+      // 通过id找到canvas
+      canvas.width = document.documentElement.clientWidth;
+      //   canvas全屏设置  宽高变成文档的宽高
+      canvas.height = document.documentElement.clientHeight;
+      let ctx = canvas.getContext("2d");
+
+      ctx.fillStyle = "black";
+      //   填充样式
+      ctx.strokeStyle = "none";
+      //描边样式
+
+      let painting = false;
+      //   设置信号灯
+
+      canvas.onmousedown = () => {
+        painting = true;
+        // 鼠标放下(点击摁住) 信号灯变绿  可以画
+      };
+
+      canvas.onmousemove = (e) => {
+        //   canvas.onclick = (e) => {   这个是点出来  上边的是移动鼠标就有
+        if (painting === true) {
+          //   ctx.fillRect(e.clientX - 5, e.clientY - 5, 10, 10); //矩形
+          //   如果鼠标摁着 可以画
+          //  -5是为了让鼠标在正中心
+
+          ctx.beginPath();
+          // 开始
+          ctx.arc(e.clientX, e.clientY, 10, 0, 2 * Math.PI);
+          ctx.stroke();
+          ctx.fill();
+        } else {
+          console.log("什么都不做");
+        }
+      };
+
+      canvas.onmouseup = () => {
+        painting = false;
+        //   松开鼠标 信号灯变红  不能画
       };
     </script>
   </body>

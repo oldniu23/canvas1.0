@@ -22,38 +22,70 @@
 
       ctx.fillStyle = "black";
       //   填充样式
-      ctx.strokeStyle = "none";
+      ctx.strokeStyle = "black";
       //描边样式
+      ctx.lineWidth = "5";
+      //线条宽度
+      ctx.lineCap = "round";
+      // 线条与线条间的连接变圆
 
       let painting = false;
       //   设置信号灯
+      let last;
+      //声明一个last变量  用来保存上一次的坐标
+      var isTouchDevice = "ontouchstart" in document.documentElement;
+      // 判断是否是触屏手机
 
-      canvas.onmousedown = () => {
-        painting = true;
-        // 鼠标放下(点击摁住) 信号灯变绿  可以画
-      };
+      if (isTouchDevice) {
+        canvas.ontouchstart = (e) => {
+          //手机上作为第一个点
+          let x = e.touches[0].clientX;
+          let y = e.touches[0].clientY;
+          last = [x, y];
+        };
+        canvas.ontouchmove = (e) => {
+          let x = e.touches[0].clientX;
+          let y = e.touches[0].clientY;
+          drawLine(last[0], last[1], x, y);
+          //调用drawLine函数画线
+          last = [x, y];
+          //实时更新last
+        };
+      } else {
+        canvas.onmousedown = (e) => {
+          // 鼠标放下(点击摁住) 信号灯变绿  可以画
+          painting = true;
+          last = [e.clientX, e.clientY];
 
-      canvas.onmousemove = (e) => {
-        //   canvas.onclick = (e) => {   这个是点出来  上边的是移动鼠标就有
-        if (painting === true) {
-          //   ctx.fillRect(e.clientX - 5, e.clientY - 5, 10, 10); //矩形
-          //   如果鼠标摁着 可以画
-          //  -5是为了让鼠标在正中心
+          //鼠标按下后 last这个点作为上一个的点
+        };
 
-          ctx.beginPath();
-          // 开始
-          ctx.arc(e.clientX, e.clientY, 10, 0, 2 * Math.PI);
-          ctx.stroke();
-          ctx.fill();
-        } else {
-          console.log("什么都不做");
-        }
-      };
+        canvas.onmousemove = (e) => {
+          //鼠标动的时候 浏览器会调用onmounsemove
+          // e是鼠标动的时候浏览器传给你的相关信息  e可以用其他字符代替
+          //   canvas.onclick = (e) => {   这个是点出来  上边的是移动鼠标就有
+          if (painting === true) {
+            //   ctx.fillRect(e.clientX - 5, e.clientY - 5, 10, 10); //矩形
+            //   如果鼠标摁着 可以画
+            //  -5是为了让鼠标在正中心
 
-      canvas.onmouseup = () => {
-        painting = false;
-        //   松开鼠标 信号灯变红  不能画
-      };
+            drawLine(last[0], last[1], e.clientX, e.clientY);
+            //调用drawLine函数画线
+            last = [e.clientX, e.clientY];
+            //实时更新last
+          }
+        };
+        canvas.onmouseup = () => {
+          painting = false;
+          //   松开鼠标 信号灯变红  不能画
+        };
+      }
+      function drawLine(x1, y1, x2, y2) {
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+      }
     </script>
   </body>
 </html>
